@@ -12,7 +12,16 @@
         {% endblock %}
     </head>
     <body>
-        <button type="button" class="btn btn-primary">Primary</button>
-        {% block body %}{% endblock %}
+        <div class="col-lg-8 mx-auto p-4 py-md-5">
+            <header>
+            </header>    
+                <main>
+                    <button type="button" class="btn btn-primary">Primary</button>
+                    {% block body %}{% endblock %}
+                </main>
+            <footer>
+            </footer>
+        </div>
+        
     </body>
 </html>
