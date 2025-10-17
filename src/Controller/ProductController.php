@@ -4,16 +4,22 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Form\ProductType;
+use Psr\Log\LoggerInterface;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/product')]
 final class ProductController extends AbstractController
 {
+    public $logger;
+    public function __construct(LoggerInterface $logger){
+        $this->logger = $logger;
+    }
+    
     #[Route(name: 'app_product_index', methods: ['GET'])]
     public function index(ProductRepository $productRepository): Response
     {
@@ -35,6 +41,7 @@ final class ProductController extends AbstractController
 
             return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
         }
+        $this->logger->info("Un produit a été ajouter");
 
         return $this->render('product/new.html.twig', [
             'product' => $product,
@@ -61,6 +68,7 @@ final class ProductController extends AbstractController
 
             return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
         }
+        $this->logger->info("Un produit a été modifier");
 
         return $this->render('product/edit.html.twig', [
             'product' => $product,
@@ -75,6 +83,7 @@ final class ProductController extends AbstractController
             $entityManager->remove($product);
             $entityManager->flush();
         }
+        $this->logger->info("Un produit a été supprimer");
 
         return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
     }
