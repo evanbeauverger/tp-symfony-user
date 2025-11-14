@@ -29,9 +29,39 @@ final class UserControllerTest extends WebTestCase
         $this->manager->flush();
     }
 
-    public function testIndex(): void
+    public function testSuperAdminIndex(): void
     {
         $testUser = new InMemoryUser('superadmin', 'password', ['ROLE_SUPER_ADMIN']);
+        $this->client->loginUser($testUser);
+
+        $this->client->followRedirects();
+        $crawler = $this->client->request('GET', $this->path);
+
+        self::assertResponseStatusCodeSame(200);
+        self::assertPageTitleContains('User index');
+
+        // Use the $crawler to perform additional assertions e.g.
+        // self::assertSame('Some text on the page', $crawler->filter('.p')->first()->text());
+    }
+
+    public function testAdminIndex(): void
+    {
+        $testUser = new InMemoryUser('admin', 'password', ['ROLE_ADMIN']);
+        $this->client->loginUser($testUser);
+
+        $this->client->followRedirects();
+        $crawler = $this->client->request('GET', $this->path);
+
+        self::assertResponseStatusCodeSame(200);
+        self::assertPageTitleContains('User index');
+
+        // Use the $crawler to perform additional assertions e.g.
+        // self::assertSame('Some text on the page', $crawler->filter('.p')->first()->text());
+    }
+
+    public function testUserIndex(): void
+    {
+        $testUser = new InMemoryUser('user', 'password', ['ROLE_USER']);
         $this->client->loginUser($testUser);
 
         $this->client->followRedirects();
